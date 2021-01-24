@@ -1,3 +1,15 @@
+import { isToday } from 'date-fns';
+import { v4 as uuid } from 'uuid';
+
+export const createCalorieLog = (calories, consumedAt) => ({
+  id: uuid(),
+  calories,
+  consumedAt,
+});
+
+export const createCalorieLogToday = (calories) =>
+  createCalorieLog(calories, new Date());
+
 export const getCaloriesRemaining = ({
   dailyCalories,
   mealWindowStartHour,
@@ -13,3 +25,5 @@ export const getCaloriesRemaining = ({
   const caloriesEarned = caloriesGainedPerMinute * minutesIntoWindow;
   return Math.floor(caloriesEarned - caloriesConsumed);
 };
+
+export const isOutdated = (log) => !isToday(log.consumedAt);
