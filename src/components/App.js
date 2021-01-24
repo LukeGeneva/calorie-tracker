@@ -8,29 +8,24 @@ import {
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 import { getCaloriesRemaining } from '../getCaloriesRemaining';
-import {
-  clearCalorieLogs,
-  fetchLogs,
-  saveLogs,
-} from '../persistence/calorieLogRepository';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { clearCalorieLogs } from '../persistence/calorieLogRepository';
 import './App.css';
 
 function App() {
-  const [logs, setLogs] = React.useState([]);
+  const [logs, setLogs] = useLocalStorage('calorie-logs', []);
   const [calorieInput, setCalorieInput] = React.useState('');
 
   React.useEffect(() => {
-    const savedLogs = fetchLogs();
     if (
-      savedLogs.length &&
+      logs.length &&
       !isSameDay(
-        parse(savedLogs[0].consumedAt, 'yyyy-MM-dd HH:mm', new Date()),
+        parse(logs[0].consumedAt, 'yyyy-MM-dd HH:mm', new Date()),
         new Date()
       )
     )
       clearCalorieLogs();
-    setLogs(fetchLogs());
-  }, []);
+  }, [logs]);
 
   const handleLogCalories = (e) => {
     e.preventDefault();
@@ -43,13 +38,11 @@ function App() {
     const updatedLogs = [...logs, log];
     setLogs(updatedLogs);
     setCalorieInput('');
-    saveLogs(updatedLogs);
   };
 
   const deleteLog = (logId) => {
     const updatedLogs = logs.filter((log) => log.id !== logId);
     setLogs(updatedLogs);
-    saveLogs(updatedLogs);
   };
 
   return (
@@ -68,8 +61,8 @@ function App() {
         <h2>
           {getCaloriesRemaining({
             dailyCalories: 2000,
-            mealWindowStartHour: 0,
-            mealWindowEndHour: 8,
+            mealWindowStartHour: 8,
+            mealWindowEndHour: 20,
             minutesElapsedInDay: differenceInMinutes(
               new Date(),
               startOfToday()
