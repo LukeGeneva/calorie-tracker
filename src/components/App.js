@@ -9,7 +9,6 @@ import React from 'react';
 import { v4 as uuid } from 'uuid';
 import { getCaloriesRemaining } from '../getCaloriesRemaining';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { clearCalorieLogs } from '../persistence/calorieLogRepository';
 import './App.css';
 
 function App() {
@@ -24,8 +23,8 @@ function App() {
         new Date()
       )
     )
-      clearCalorieLogs();
-  }, [logs]);
+      setLogs([]);
+  }, [logs, setLogs]);
 
   const handleLogCalories = (e) => {
     e.preventDefault();
