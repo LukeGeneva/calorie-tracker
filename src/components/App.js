@@ -1,8 +1,18 @@
-import { differenceInMinutes, startOfToday } from 'date-fns';
+import {
+  differenceInMinutes,
+  format,
+  isSameDay,
+  parse,
+  startOfToday,
+} from 'date-fns';
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 import { getCaloriesRemaining } from '../getCaloriesRemaining';
-import { fetchLogs, saveLogs } from '../persistence/calorieLogRepository';
+import {
+  clearCalorieLogs,
+  fetchLogs,
+  saveLogs,
+} from '../persistence/calorieLogRepository';
 import './App.css';
 
 function App() {
@@ -10,13 +20,26 @@ function App() {
   const [calorieInput, setCalorieInput] = React.useState('');
 
   React.useEffect(() => {
+    const savedLogs = fetchLogs();
+    if (
+      savedLogs.length &&
+      !isSameDay(
+        parse(savedLogs[0].consumedAt, 'yyyy-MM-dd HH:mm', new Date()),
+        new Date()
+      )
+    )
+      clearCalorieLogs();
     setLogs(fetchLogs());
   }, []);
 
   const handleLogCalories = (e) => {
     e.preventDefault();
     const calories = parseInt(calorieInput);
-    const log = { id: uuid(), calories };
+    const log = {
+      id: uuid(),
+      calories,
+      consumedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    };
     const updatedLogs = [...logs, log];
     setLogs(updatedLogs);
     setCalorieInput('');
@@ -58,7 +81,7 @@ function App() {
           })}
         </h2>
         {logs.map((log) => (
-          <div>
+          <div key={log.id}>
             {log.calories}
             <button onClick={() => deleteLog(log.id)}>Delete</button>
           </div>
