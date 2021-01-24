@@ -1,5 +1,7 @@
+import { differenceInMinutes, startOfToday } from 'date-fns';
 import React from 'react';
 import { v4 as uuid } from 'uuid';
+import { getCaloriesRemaining } from '../getCaloriesRemaining';
 import { fetchLogs, saveLogs } from '../persistence/calorieLogRepository';
 import './App.css';
 
@@ -39,6 +41,22 @@ function App() {
           />
           <button>Add</button>
         </form>
+        <h1>Calories Available</h1>
+        <h2>
+          {getCaloriesRemaining({
+            dailyCalories: 2000,
+            mealWindowStartHour: 0,
+            mealWindowEndHour: 8,
+            minutesElapsedInDay: differenceInMinutes(
+              new Date(),
+              startOfToday()
+            ),
+            caloriesConsumed: logs.reduce(
+              (total, log) => total + log.calories,
+              0
+            ),
+          })}
+        </h2>
         {logs.map((log) => (
           <div>
             {log.calories}
