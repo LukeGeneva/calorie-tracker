@@ -27,3 +27,6 @@ export const getCaloriesRemaining = ({
 };
 
 export const isOutdated = (log) => !isToday(log.consumedAt);
+
+export const sumCalories = (logs) =>
+  logs.reduce((total, log) => total + log.calories, 0);

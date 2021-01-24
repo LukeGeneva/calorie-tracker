@@ -4,6 +4,7 @@ import {
   createCalorieLogToday,
   getCaloriesRemaining,
   isOutdated,
+  sumCalories,
 } from './calorie-log';
 
 test('that calories are calculated correctly with no logs', () => {
@@ -58,4 +59,9 @@ test("that yesterday's logs are outdated", () => {
 test("that today's logs are not outdated", () => {
   const log = createCalorieLogToday(10);
   expect(isOutdated(log)).toBeFalsy();
+});
+
+test('that calories can be summed', () => {
+  const logs = [createCalorieLogToday(5), createCalorieLogToday(10)];
+  expect(sumCalories(logs)).toBe(15);
 });

@@ -5,7 +5,11 @@ import {
   startOfToday,
 } from 'date-fns';
 import React from 'react';
-import { createCalorieLogToday, getCaloriesRemaining } from '../calorie-log';
+import {
+  createCalorieLogToday,
+  getCaloriesRemaining,
+  sumCalories,
+} from '../calorie-log';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import './App.css';
 
@@ -54,10 +58,7 @@ function App() {
               new Date(),
               startOfToday()
             ),
-            caloriesConsumed: logs.reduce(
-              (total, log) => total + log.calories,
-              0
-            ),
+            caloriesConsumed: sumCalories(logs),
           })}
         </h2>
         {logs.map((log) => (
