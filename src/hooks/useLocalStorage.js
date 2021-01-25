@@ -1,13 +1,13 @@
 import React from 'react';
 
-export const useLocalStorage = (key, initialState) => {
+export const useLocalStorage = (key, initialState, parse = JSON.parse) => {
   const [data, setData] = React.useState(initialState);
 
   React.useEffect(() => {
     const item = localStorage.getItem(key);
     if (!item) return;
-    setData(JSON.parse(item));
-  }, [key]);
+    setData(parse(item));
+  }, [key, parse]);
 
   const set = (item) => {
     setData(item);

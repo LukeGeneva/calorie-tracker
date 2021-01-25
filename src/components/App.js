@@ -1,25 +1,27 @@
-import {
-  differenceInMinutes,
-  isSameDay,
-  parseJSON,
-  startOfToday,
-} from 'date-fns';
+import { differenceInMinutes, parseJSON, startOfToday } from 'date-fns';
 import React from 'react';
 import {
   createCalorieLogToday,
   getCaloriesRemaining,
+  isOutdated,
   sumCalories,
 } from '../calorie-log';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import './App.css';
 
+const parse = (logArrayJSON) =>
+  JSON.parse(logArrayJSON).map((log) => ({
+    ...log,
+    consumedAt: parseJSON(log.consumedAt),
+  }));
+
 function App() {
-  const [logs, setLogs] = useLocalStorage('calorie-logs', []);
+  const [logs, setLogs] = useLocalStorage('calorie-logs', [], parse);
   const [calorieInput, setCalorieInput] = React.useState('');
 
   React.useEffect(() => {
-    if (logs.length && !isSameDay(parseJSON(logs[0].consumedAt), new Date()))
-      setLogs([]);
+    if (!logs.length) return;
+    if (isOutdated(logs[0])) setLogs([]);
   }, [logs, setLogs]);
 
   const handleLogCalories = (e) => {
