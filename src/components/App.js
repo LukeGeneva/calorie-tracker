@@ -1,4 +1,4 @@
-import { differenceInMinutes, parseJSON, startOfToday } from 'date-fns';
+import { differenceInMinutes, startOfToday } from 'date-fns';
 import React from 'react';
 import {
   createCalorieLogToday,
@@ -6,17 +6,11 @@ import {
   isOutdated,
   sumCalories,
 } from '../calorie-log';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import './App.css';
-
-const parse = (logArrayJSON) =>
-  JSON.parse(logArrayJSON).map((log) => ({
-    ...log,
-    consumedAt: parseJSON(log.consumedAt),
-  }));
+import { useCalorieLogs } from '../hooks/useCalorieLogs';
 
 function App() {
-  const [logs, setLogs] = useLocalStorage('calorie-logs', [], parse);
+  const [logs, setLogs] = useCalorieLogs();
   const [calorieInput, setCalorieInput] = React.useState('');
 
   React.useEffect(() => {
