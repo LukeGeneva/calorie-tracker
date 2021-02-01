@@ -39,37 +39,40 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <form onSubmit={handleLogCalories}>
-          <input
-            type="number"
-            value={calorieInput}
-            onChange={(e) => setCalorieInput(e.target.value)}
-            placeholder="Calories Consumed"
-          />
-          <button>Add</button>
-        </form>
-        <h1>Calories Available</h1>
-        <h2>
-          {getCaloriesRemaining({
-            dailyCalories: 2000,
-            mealWindowStartHour: 8,
-            mealWindowEndHour: 20,
-            minutesElapsedInDay: differenceInMinutes(
-              new Date(),
-              startOfToday()
-            ),
-            caloriesConsumed: sumCalories(logs),
-          })}
-        </h2>
-        {logs.map((log) => (
-          <div key={log.id}>
-            {log.calories}
-            <button onClick={() => deleteLog(log.id)}>Delete</button>
+    <div className="App container">
+      <h1 className="title is-1">Calories Available</h1>
+      <h2 className="subtitle is-2">
+        {getCaloriesRemaining({
+          dailyCalories: 2000,
+          mealWindowStartHour: 8,
+          mealWindowEndHour: 20,
+          minutesElapsedInDay: differenceInMinutes(new Date(), startOfToday()),
+          caloriesConsumed: sumCalories(logs),
+        })}
+      </h2>
+      <form className="calorie-form mb-4" onSubmit={handleLogCalories}>
+        <div className="field">
+          <div className="control">
+            <input
+              className="input"
+              type="number"
+              value={calorieInput}
+              onChange={(e) => setCalorieInput(e.target.value)}
+              placeholder="Calories Consumed"
+            />
           </div>
-        ))}
-      </header>
+        </div>
+        <button className="button is-primary">Add</button>
+      </form>
+      {logs.map((log) => (
+        <span className="tag is-large mr-2 mb-2" key={log.id}>
+          {log.calories}
+          <button
+            className="delete is-small"
+            onClick={() => deleteLog(log.id)}
+          ></button>
+        </span>
+      ))}
     </div>
   );
 }
